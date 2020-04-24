@@ -13,6 +13,16 @@ Feature: Exchange Rates
     When I GET the latest foreign exchange rates
     Then I should see the default rate as yesterday
 
+  Scenario: Validate the future date
+    Given I have access to <api> for Foreign Exchange rates with year as 2050
+    When I GET the latest foreign exchange rates
+    Then I should see the default rate as yesterday
+
+  Scenario: Validate the past date
+    Given I have access to <api> for Foreign Exchange rates with year as 1989
+    When I GET the latest foreign exchange rates
+    Then I should see the HTTP response code as 400
+
   Scenario: Validate the default base rate can be changed to any other currency
     Given I have access to <api> for Foreign Exchange rates with base rate as GBP
     When I GET the latest foreign exchange rates

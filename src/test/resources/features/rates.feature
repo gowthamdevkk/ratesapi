@@ -14,19 +14,23 @@ Feature: Exchange Rates
     Then I should see the default rate as yesterday
 
   Scenario: Validate the future date
-    Given I have access to <api> for Foreign Exchange rates with year as 2050
+    Given I have access to valid dates api for Foreign Exchange rates with year as 2050
     When I GET the latest foreign exchange rates
     Then I should see the default rate as yesterday
 
   Scenario: Validate the past date
-    Given I have access to <api> for Foreign Exchange rates with year as 1989
+    Given I have access to valid dates api for Foreign Exchange rates with year as 1989
     When I GET the latest foreign exchange rates
     Then I should see the HTTP response code as 400
 
-  Scenario: Validate the default base rate can be changed to any other currency
-    Given I have access to <api> for Foreign Exchange rates with base rate as GBP
+  Scenario Outline: Validate the default base rate can be changed to any other currency
+    Given I have access to <api> for Foreign Exchange rates with base rate as <currency>
     When I GET the latest foreign exchange rates
-    Then I should see the default rate as GBP
+    Then I should see the default rate as <currency>
+    Examples:
+      |api        |currency  |
+      |valid      |GBP       |
+      |valid dates|USD       |
 
   Scenario Outline : Validate specific currency rate
     Given I have access to <api> for Foreign Exchange rates with <symbols>
@@ -35,10 +39,13 @@ Feature: Exchange Rates
     And I should see the default rate as EUR
 
     Examples:
-      |symbols  |
-      |GBP,USD  |
-      |AUD      |
-      |THB      |
+      |api        |symbols  |
+      |valid      |GBP,USD  |
+      |valid      |AUD      |
+      |valid      |THB      |
+      |valid dates|GBP,USD  |
+      |valid dates|AUD      |
+      |valid date |THB      |
 
   Scenario Outline : Validate specific currency rate with a different base rate
     Given I have access to <api> for Foreign Exchange rates with <symbols> and base rate as USD
@@ -47,10 +54,13 @@ Feature: Exchange Rates
     And I should see the default rate as USD
 
     Examples:
-      |symbols  |
-      |GBP,USD  |
-      |AUD      |
-      |THB      |
+      |api        |symbols  |
+      |valid      |GBP,USD  |
+      |valid      |AUD      |
+      |valid      |THB      |
+      |valid dates|THB      |
+      |valid dates|GBP,USD  |
+      |valid dates|AUD      |
 
   Scenario Outline : Validate specific currency rate
     Given I have access to <api> for Foreign Exchange rates with <symbols>
@@ -58,12 +68,13 @@ Feature: Exchange Rates
     Then I should see the HTTP response code as <response code>
 
     Examples:
-      |symbols  |response code|
-      |         |             |
-      |gbp,AUD  |400          |
-      |Usd      |400          |
-
-
+      |api        |symbols  |response code|
+      |valid dates|         |             |
+      |valid dates|gbp,AUD  |400          |
+      |valid dates|Usd      |400          |
+      |valid      |         |             |
+      |valid      |gbp,AUD  |400          |
+      |valid      |Usd      |400          |
 
   Scenario Outline: Validate API response code for Latest Foreign Exchange rates
     Given I have access to <api> for Foreign Exchange rates

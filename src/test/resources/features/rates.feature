@@ -27,6 +27,7 @@ Feature: Exchange Rates
     Given I have access to <api> for Foreign Exchange rates with base rate as <currency>
     When I GET the latest foreign exchange rates
     Then I should see the default rate as <currency>
+    
     Examples:
       |api        |currency  |
       |valid      |GBP       |
